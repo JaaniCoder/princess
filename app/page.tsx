@@ -1,69 +1,104 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { CanvasBackground } from "@/components/CanvasBackground";
+import { MagicMirror } from "@/components/MagicMirror";
+import { TimeCounter } from "@/components/TimeCounter";
+import { DesignerGallery } from "@/components/DesignerGallery";
+import { Manifesto } from "@/components/Manifesto";
+import { PoetryVault } from "@/components/PoetryVault";
+import { motion } from "framer-motion";
+
+export default function PrincessDaySurprise() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  // Cinematic scroll animation configuration for all sections
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 60, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { 
+        duration: 1.2, 
+        ease: [0.22, 1, 0.36, 1] as const // Custom aesthetic easing (like a smooth physical spring)
+      } 
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="relative min-h-screen bg-[#0a0510] text-white overflow-hidden font-sans selection:bg-rose-500 selection:text-white">
+      <CanvasBackground />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 flex flex-col gap-32 md:gap-40">
+        
+        {/* Hero Section with Staggered Entrance */}
+        <motion.section 
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.4 } } // Delays the paragraph until the title appears
+          }}
+          className="text-center space-y-6 mt-10 md:mt-20"
+        >
+          <motion.h1 
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } }
+            }}
+            className="text-5xl md:text-7xl font-bold tracking-tight pb-2"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <motion.span 
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="inline-block bg-clip-text text-transparent bg-linear-to-r from-rose-400 via-pink-400 to-fuchsia-400"
+            >
+              Happy National Princess Day, Khyati
+            </motion.span>
+          </motion.h1>
+          
+          <motion.p 
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } }
+            }}
+            className="text-lg md:text-xl text-pink-100/70 max-w-2xl mx-auto font-light"
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            You are the center of my universe, the perfect design of my life, and the only one for me.
+          </motion.p>
+        </motion.section>
+
+        {/* Feature Sections - Triggering precisely when she scrolls them into view */}
+        
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+          <MagicMirror />
+        </motion.div>
+        
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+          {/* Using your exact first date */}
+          <TimeCounter startDate={new Date("2025-02-19T00:00:00")} />
+        </motion.div>
+
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}>
+          <DesignerGallery />
+        </motion.div>
+
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+          <Manifesto />
+        </motion.div>
+
+        <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
+          <PoetryVault />
+        </motion.div>
+        
+      </div>
+    </main>
   );
 }
